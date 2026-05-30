@@ -1,0 +1,43 @@
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "nodus-native-memory-engine"
+version = "0.1.0"
+description = "Native memory scoring, similarity, and traversal for Nodus"
+authors = [{ name = "Shawn Knight" }]
+license = { file = "LICENSE" }
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Rust",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = []
+
+[project.optional-dependencies]
+nodus = ["nodus-lang>=4.0.0,<5.0.0"]
+
+[project.urls]
+Homepage = "https://github.com/Masterplanner25/nodus-native-memory-engine"
+Repository = "https://github.com/Masterplanner25/nodus-native-memory-engine"
+Changelog = "https://github.com/Masterplanner25/nodus-native-memory-engine/blob/main/CHANGELOG.md"
+
+[tool.maturin]
+python-source = "."
+module-name = "nodus_native_memory_engine._core"
+features = ["pyo3/extension-module"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage.report]
+fail_under = 80

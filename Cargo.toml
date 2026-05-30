@@ -1,0 +1,19 @@
+[package]
+name = "nodus-native-memory-engine"
+version = "0.1.0"
+edition = "2021"
+description = "Native memory scoring, similarity, and traversal for Nodus"
+license = "MIT"
+authors = ["Shawn Knight"]
+
+[lib]
+name = "nodus_native_memory_engine"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.22", features = ["extension-module"] }
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3
