@@ -33,3 +33,49 @@ All functions have pure-Python fallbacks — the package works even without the 
 ## Status
 
 v0.1.0 — PREPARED, NOT RELEASED.
+
+## Pure Python fallback
+
+The native Rust extension is optional. When not installed (or when the Rust
+build fails), all operations fall back to pure Python implementations
+automatically. Use `is_native()` to check which path is active:
+
+```python
+from nodus_native_memory_engine import is_native
+print(is_native())   # True = Rust extension, False = pure Python
+```
+
+The fallback has the same API but is slower on large batches.
+
+## Auto-detection by nodus-memory
+
+Once installed, `nodus-memory` automatically detects and uses the native engine
+for hot-path operations. No configuration needed.
+
+## Build requirements (Rust extension)
+
+- Rust 1.93.1+
+- maturin 1.12.6+
+- Python 3.11+
+
+```bash
+# Install with Rust extension (development)
+VIRTUAL_ENV="C:/dev/Coding Language/.venv" maturin develop --release
+
+# Install wheel only (pure Python fallback, no Rust needed)
+pip install nodus-native-memory-engine
+```
+
+## Development
+
+```bash
+# Build and install Rust extension for development
+maturin develop --release
+
+# Run tests (works with or without Rust extension)
+pytest tests/ -q
+```
+
+## License
+
+MIT — see [LICENSE](LICENSE).

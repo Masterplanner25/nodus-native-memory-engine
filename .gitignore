@@ -11,3 +11,4 @@ htmlcov/
 *.so
 *.pyd
 *.pdb
+.ruff_cache/
