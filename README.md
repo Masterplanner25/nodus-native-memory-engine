@@ -32,7 +32,7 @@ All functions have pure-Python fallbacks — the package works even without the 
 
 ## Status
 
-v0.1.0 — PREPARED, NOT RELEASED.
+v0.1.0 — published on [PyPI](https://pypi.org/project/nodus-native-memory-engine/).
 
 ## Pure Python fallback
 
