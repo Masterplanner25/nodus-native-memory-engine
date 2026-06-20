@@ -1,5 +1,7 @@
 # nodus-native-memory-engine
 
+> **Status:** v0.1.0 — published on [PyPI](https://pypi.org/project/nodus-native-memory-engine/).
+
 Rust-accelerated memory scoring, similarity, and traversal for Nodus agents.
 
 Provides native implementations of the hot-path operations from `nodus-memory`:
