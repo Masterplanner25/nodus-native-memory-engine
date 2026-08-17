@@ -5,6 +5,21 @@ Versioning: [Semantic Versioning](https://semver.org)
 
 ## [Unreleased]
 
+## [0.1.1] — 2026-08-17
+
+### Changed
+
+- **Floated the `nodus-lang` dependency in the `nodus` extra to `>=4.0.0`**
+  (was `>=4.0.0,<5.0.0`). The upper bound made `pip install
+  nodus-native-memory-engine[nodus]` unresolvable alongside nodus-lang 5.0.0,
+  while nothing in the code was incompatible — the full suite (76 tests) passes
+  against 5.0.0 unchanged. The core package has no nodus-lang dependency and was
+  never affected.
+
+  The cap was prophylactic rather than earned; no 5.x break was ever recorded
+  here. This package's own suite is the check that catches a real break; a cap
+  earns its place once a break is known.
+
 ## [0.1.0] — 2026-06-10
 
 
