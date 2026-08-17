@@ -21,7 +21,7 @@ from __future__ import annotations
 import math
 from typing import Optional
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 # ─── try to load the Rust extension ──────────────────────────────────────────
 

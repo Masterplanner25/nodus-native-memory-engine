@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "nodus-native-memory-engine"
-version = "0.1.0"
+version = "0.1.1"
 description = "Native memory scoring, similarity, and traversal for Nodus"
 authors = [{ name = "Shawn Knight" }]
 license = { file = "LICENSE" }
@@ -24,7 +24,7 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-nodus = ["nodus-lang>=4.0.0,<5.0.0"]
+nodus = ["nodus-lang>=4.0.0"]
 
 [project.urls]
 Homepage = "https://github.com/Masterplanner25/nodus-native-memory-engine"
