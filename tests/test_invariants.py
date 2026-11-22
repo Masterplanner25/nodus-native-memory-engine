@@ -96,15 +96,60 @@ class TestWeightFormulaCorrectness:
         assert compute_weight(0.001, 0, 0, 0) == 0.0
 
 
-class TestNoBytecodeVersionChange:
-    def test_nodus_bytecode_version_still_4(self):
+# Run in a fresh interpreter: import every module of `argv[1]` (none if empty),
+# then print the opcodes a new nodus VM dispatches.
+_OPCODES_AFTER_IMPORT = r"""
+import importlib, json, pkgutil, sys
+if sys.argv[1]:
+    package = importlib.import_module(sys.argv[1])
+    for info in pkgutil.walk_packages(package.__path__, sys.argv[1] + "."):
         try:
-            import sys
-            sys.path.insert(0, "C:/dev/Coding Language/src")
-            from nodus.compiler.compiler import BYTECODE_VERSION
-            assert BYTECODE_VERSION == 4
+            importlib.import_module(info.name)
         except ImportError:
-            pytest.skip("nodus-lang not on path")
+            pass  # an optional dependency this environment lacks
+from nodus.vm.vm import VM
+print(json.dumps(sorted(VM([], {}, code_locs=[], source_path=None)._dispatch)))
+"""
+
+
+def _opcodes_after_importing(package: str) -> list:
+    import json
+    import os
+    import subprocess
+    import sys
+
+    env = dict(os.environ, PYTHONPATH=os.pathsep.join(p for p in sys.path if p))
+    proc = subprocess.run([sys.executable, "-c", _OPCODES_AFTER_IMPORT, package],
+                          capture_output=True, text=True, env=env, timeout=120)
+    assert proc.returncode == 0, proc.stderr[-800:]
+    return json.loads(proc.stdout.strip().splitlines()[-1])
+
+
+class TestNoNewOpcodes:
+    def test_importing_the_package_leaves_the_opcode_set_alone(self):
+        """nodus-native-memory-engine adds no opcodes.
+
+        This asserted nodus-lang's `BYTECODE_VERSION == 4`, reaching for a
+        hard-coded checkout path to find it. That is nodus-lang's number, which
+        this package cannot change, so it guarded nothing here and failed when
+        nodus-lang 5.17.0 added opcodes through its own extension process
+        (#969). It checks the package instead: importing every module of it
+        leaves a nodus VM's opcode set as nodus-lang defines it, and the source
+        never reaches for the VM's dispatch table or the bytecode version.
+        """
+        pytest.importorskip("nodus.vm.vm", reason="nodus-lang not importable")
+        import re
+        from pathlib import Path
+
+        bare = _opcodes_after_importing("")
+        assert len(bare) > 20, f"read {len(bare)} opcodes: the comparison would prove nothing"
+        assert _opcodes_after_importing("nodus_native_memory_engine") == bare, (
+            "importing nodus_native_memory_engine changed the VM's opcode set")
+        vm_internals = re.compile(r"\b(?:vm|VM)\._dispatch\b|_build_dispatch_table|BYTECODE_VERSION\s*=")
+        source = Path(__file__).resolve().parents[1] / "nodus_native_memory_engine"
+        touching = [p.name for p in source.rglob("*.py")
+                    if vm_internals.search(p.read_text(encoding="utf-8"))]
+        assert not touching, f"{touching} reach into the VM's dispatch table"
 
 
 class TestInstallRoundtrip:
